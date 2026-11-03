@@ -1,6 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
+import App from './App';
 import './index.css';
 
 interface ErrorBoundaryProps {
@@ -58,15 +58,38 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
-const rootElement = document.getElementById('root');
-if (rootElement) {
-  createRoot(rootElement).render(
-    <React.StrictMode>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </React.StrictMode>
-  );
+function mountApp() {
+  const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    console.error('Root element #root not found in document!');
+    return;
+  }
+
+  try {
+    const root = createRoot(rootElement);
+    root.render(
+      <React.StrictMode>
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
+      </React.StrictMode>
+    );
+    console.log('App successfully mounted into #root');
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error('Fatal error rendering root:', error);
+    rootElement.innerHTML = `
+      <div style="direction:rtl;padding:24px;color:#991b1b;background:#fef2f2;border:2px solid #ef4444;border-radius:14px;margin:20px auto;max-width:550px;text-align:center;font-family:sans-serif;">
+        <h3 style="margin-top:0;">تعذر تشغيل التطبيق</h3>
+        <p style="font-family:monospace;direction:ltr;background:#fff;padding:8px;border-radius:6px;border:1px solid #fecdd3;">${error?.message || String(err)}</p>
+        <button onclick="window.location.reload()" style="padding:8px 16px;background:#dc2626;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">إعادة تحميل الصفحة</button>
+      </div>
+    `;
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', mountApp);
 } else {
-  console.error('Root element #root not found in document');
+  mountApp();
 }
