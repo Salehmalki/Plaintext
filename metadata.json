@@ -1,0 +1,6 @@
+{
+  "name": "القسمة المطولة خطوة بخطوة",
+  "description": "تطبيق تعليمي تفاعلي لشرح خطوات القسمة المطولة بالتفصيل (اقسم، اضرب، اطرح، أنزل) مع الاستلاف والتحقق ودعم الأرقام العربية والإنجليزية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

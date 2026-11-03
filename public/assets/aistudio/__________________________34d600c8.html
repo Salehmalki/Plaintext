@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>القسمة المطولة خطوة بخطوة</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap">
+<style>
+:root{--paper:#f6fbff;--grid:#d6e6f5;--ink:#1c3a7a;--soft:#7a93c2;--red:#d93a2f;--green:#12805a;--hl:#ffe36b;--card:#fff;--line:#c4d6ea;--btn:#1c3a7a;--btnt:#fff;--warn:#fff1d6;--warnt:#8a4b00;--okbg:#dff5ea;--okt:#0b5a3e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#101a26;--grid:#1b2a3b;--ink:#d3e2ff;--soft:#7f98c4;--red:#ff7a6e;--green:#5fd6a4;--hl:#6a5800;--card:#17253a;--line:#2a3d57;--btn:#8db4ff;--btnt:#0d1b33;--warn:#3d2e10;--warnt:#ffd08a;--okbg:#12352a;--okt:#9ff0cf;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#101a26;--grid:#1b2a3b;--ink:#d3e2ff;--soft:#7f98c4;--red:#ff7a6e;--green:#5fd6a4;--hl:#6a5800;--card:#17253a;--line:#2a3d57;--btn:#8db4ff;--btnt:#0d1b33;--warn:#3d2e10;--warnt:#ffd08a;--okbg:#12352a;--okt:#9ff0cf;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Cairo",Tahoma,Arial,sans-serif;color:var(--ink);background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;line-height:1.7}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 40px}
+h1{font-size:1.9rem;font-weight:900;margin:8px 0 0}
+.sub{margin:0 0 14px;color:var(--soft)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
+.row{display:flex;align-items:flex-end;gap:10px}
+.row label{flex:1;font-weight:700;font-size:.95rem;display:block}
+.op{font-size:1.8rem;font-weight:900;padding-bottom:4px}
+input{width:100%;font:inherit;font-size:1.6rem;font-weight:900;text-align:center;direction:ltr;color:var(--ink);background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:6px 8px;margin-top:4px}
+input:focus-visible,button:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+button{font:inherit;font-weight:700;cursor:pointer;border-radius:12px;border:2px solid var(--btn);background:transparent;color:var(--ink);padding:8px 14px}
+button.main{background:var(--btn);color:var(--btnt);width:100%;font-size:1.15rem;margin-top:12px;padding:10px}
+button:disabled{opacity:.4;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.chips span{color:var(--soft);font-size:.9rem}
+.chips button{padding:2px 12px;font-size:.95rem;direction:ltr}
+.err{color:var(--red);font-weight:700;min-height:1.4em;margin-top:8px}
+.board{overflow-x:auto;padding:22px 6px 10px;--c:clamp(1.9rem,9vw,2.6rem)}
+.rw{display:grid;grid-template-columns:calc(var(--c)*var(--g)) repeat(var(--n),var(--c));width:max-content;margin:0 auto}
+.rw .c,.rw .gut{height:calc(var(--c)*1.3);display:flex;justify-content:center;align-items:flex-end;position:relative;font-size:calc(var(--c)*.85);font-weight:900;line-height:1.2}
+.gut{justify-content:flex-end!important;padding-inline-end:.25em;color:var(--soft)}
+.dvd .gut{color:var(--ink);border-inline-end:3px solid var(--ink)}
+.dvd .c{border-top:3px solid var(--ink)}
+.dvd .c.fut{color:var(--soft);opacity:.55}
+.ln .c.f{border-bottom:3px solid var(--ink)}
+.qr .c{color:var(--green)}
+.c.down{color:var(--red)}
+.c.new,.c.q.new{background:var(--hl);border-radius:6px}
+.c.ov{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:3px}
+.c i{position:absolute;top:0;font-size:.5em;font-style:normal;color:var(--red)}
+.cyc{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+.cyc span{flex:1;text-align:center;border:2px solid var(--line);border-radius:10px;padding:2px 6px;font-weight:700;color:var(--soft);font-size:.95rem}
+.cyc span.on{background:var(--btn);color:var(--btnt);border-color:var(--btn)}
+.bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.bar i{display:block;height:100%;background:var(--green);transition:width .25s}
+.lbl{font-weight:900;font-size:1.25rem;margin:0 0 4px}
+.exp p{margin:4px 0;font-size:1.05rem}
+.eq{font-weight:900;background:var(--paper);border-radius:6px;padding:0 6px;white-space:nowrap}
+.bw{margin:6px 0 0;padding-inline-start:1.2em;color:var(--red)}
+.bw li{margin:2px 0}
+.bw.no{list-style:none;padding:0}
+.res{border-radius:14px;padding:10px 14px;margin-top:8px}
+.res.ok{background:var(--okbg);color:var(--okt)}
+.res.rem{background:var(--warn);color:var(--warnt)}
+.res b{font-size:1.25rem}
+.res p{margin:2px 0}
+.nav{display:flex;gap:8px;margin-top:12px}
+.nav button{flex:1}
+.nav .nx{background:var(--btn);color:var(--btnt);flex:2}
+details{margin-top:12px}
+summary{cursor:pointer;font-weight:700}
+ol.all{padding-inline-start:1.3em}
+ol.all li{margin:6px 0;cursor:pointer}
+ol.all li.cur{background:var(--hl);border-radius:8px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top">
+  <div><h1>القسمة المطولة</h1><p class="sub">اكتب العددين وشاهد كل خطوة بهدوء: اقسم، اضرب، اطرح، أنزل.</p></div>
+  <button id="dg" title="تغيير شكل الأرقام" aria-label="تغيير شكل الأرقام"></button>
+ </div>
+
+ <section class="card">
+  <div class="row">
+   <label>المقسوم<input id="a" inputmode="numeric" maxlength="9" autocomplete="off"></label>
+   <span class="op">÷</span>
+   <label>المقسوم عليه<input id="b" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+  </div>
+  <button class="main" id="go">ابدأ الشرح</button>
+  <div class="err" id="msg" role="alert"></div>
+  <div class="chips" id="chips"></div>
+ </section>
+
+ <section id="work" hidden>
+  <div class="card"><div class="board" id="board" dir="ltr"></div></div>
+  <div class="card exp">
+   <div class="bar"><i id="pg"></i></div>
+   <div class="cyc" id="cyc"></div>
+   <div id="txt" aria-live="polite"></div>
+   <div class="nav">
+    <button id="pv">السابق</button>
+    <button id="nx" class="nx">التالي</button>
+    <button id="rs">من البداية</button>
+   </div>
+   <details id="alld"><summary>كل الخطوات في قائمة</summary><ol class="all" id="all"></ol></details>
+  </div>
+ </section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const E='٠١٢٣٤٥٦٧٨٩';
+const NAMES=['الآحاد','العشرات','المئات','الآلاف','عشرات الآلاف','مئات الآلاف','الملايين','عشرات الملايين','مئات الملايين'];
+let east=true,data=null,steps=[],t=0;
+const F=s=>east?String(s).replace(/[0-9]/g,d=>E[d]):String(s);
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>E.indexOf(d)).replace(/\D/g,'');
+const eq=x=>`<bdi dir="ltr" class="eq">${F(x)}</bdi>`;
+
+function sub(W,P){
+ const w=String(W).split('').reverse().map(Number),p=String(P).split('').reverse().map(Number);
+ let bi=0,any=false;const lines=[],overs={};
+ for(let i=0;i<w.length;i++){
+  const tp=w[i],pd=p[i]||0,eff=tp-bi,bo=eff<pd?1:0,top=eff+10*bo,nm=NAMES[i];
+  if(i>=p.length&&!bi&&!bo)break;
+  let s;
+  if(bo){any=true;
+   s=eff<0?`${nm}: فيها ${eq(0)} وقد استلفت منها الخانة السابقة، فنستلف ${eq(1)} من الخانة التي بعدها فتصير ${eq(10)} ثم تعطي ${eq(1)} فيبقى ${eq(top)}، ${eq(top+' − '+pd+' = '+(top-pd))}`
+   :`${nm}: ${eq(eff)} أصغر من ${eq(pd)}، فنستلف ${eq(1)} من الخانة التي بعدها فيصبح ${eq(top)}، ${eq(top+' − '+pd+' = '+(top-pd))}`;
+   if(bi&&eff>=0)s=s;
+  }else if(bi){s=`${nm}: كان فيها ${eq(tp)} وأعطت ${eq(1)} للخانة السابقة فبقي ${eq(eff)}، ${eq(eff+' − '+pd+' = '+(eff-pd))}`}
+  else s=`${nm}: ${eq(tp+' − '+pd+' = '+(tp-pd))}`;
+  if(top!==tp)overs[i]=top;
+  lines.push(s);bi=bo;
+ }
+ return{lines,overs,any};
+}
+
+function build(ns,D){
+ const dg=ns.split('').map(Number),n=dg.length,N=+ns;
+ let k=0,W=0;
+ while(k<n){W=W*10+dg[k];k++;if(W>=D)break}
+ const blocks=[];let cur=W,e=k-1;
+ for(;;){
+  const q=Math.floor(cur/D),P=q*D,R=cur-P;
+  blocks.push({e,W:cur,q,P,R,d:dg[e]});
+  if(e===n-1)break;
+  e++;cur=R*10+dg[e];
+ }
+ const S=[];
+ blocks.forEach((b,i)=>{
+  S.push({t:i?'down':'pick',b});
+  S.push({t:'div',b});
+  if(b.q>0){S.push({t:'mul',b});S.push({t:'sub',b,sub:sub(b.W,b.P)})}
+ });
+ S.push({t:'end',b:blocks[blocks.length-1]});
+ return{dg,n,N,D,blocks,S,Q:blocks.map(b=>b.q).join(''),R:blocks[blocks.length-1].R};
+}
+
+const LBL={pick:'ابدأ',down:'أنزل',div:'اقسم',mul:'اضرب',sub:'اطرح',end:'النتيجة'};
+function txt(s){
+ const b=s.b,D=data.D,bl=data.blocks,prev=bl[bl.indexOf(b)-1];
+ switch(s.t){
+ case 'pick':{const k=b.e+1;
+  if(b.W<D)return `نأخذ المقسوم كله ${eq(b.W)}، وهو أصغر من ${eq(D)}.`;
+  return k===1?`نبدأ بأول رقم في المقسوم: ${eq(b.W)}. هو أكبر من ${eq(D)} أو يساويه، فنستطيع القسمة.`
+   :`أول رقم ${eq(data.dg[0])} أصغر من ${eq(D)} فلا يكفي، فنأخذ ${F(k)} أرقام معًا: ${eq(b.W)}.`}
+ case 'down':return `ننزل الرقم التالي ${eq(b.d)} بجانب الباقي ${eq(prev.R)}، فيصبح العدد ${eq(b.W)}.`;
+ case 'div':
+  if(b.q>0)return `كم مرة يدخل ${eq(D)} في ${eq(b.W)}؟ يدخل ${eq(b.q)} مرات، لأن ${eq(D+' × '+b.q+' = '+b.P)} ولو جربنا ${eq(b.q+1)} لتجاوزنا ${eq(b.W)} لأن ${eq(D+' × '+(b.q+1)+' = '+(b.P+D))}. نكتب ${eq(b.q)} في الناتج فوق آخر رقم أخذناه.`;
+  return `${eq(b.W)} أصغر من ${eq(D)} فلا يدخل فيه ولا مرة. نكتب ${eq(0)} في الناتج.`+(b===bl[bl.length-1]?` ويصبح الباقي ${eq(b.W)}.`:' ثم ننزل الرقم التالي.');
+ case 'mul':return `نضرب الرقم الذي كتبناه في الناتج في المقسوم عليه: ${eq(b.q+' × '+D+' = '+b.P)}. نكتب ${eq(b.P)} تحت ${eq(b.W)}.`;
+ case 'sub':{const r=s.sub;
+  return `نطرح من اليمين، خانة بخانة: ${eq(b.W+' − '+b.P+' = '+b.R)}.`+(r.any?`<p><b>هنا نحتاج إلى استلاف:</b></p>`:`<p>لا نحتاج إلى استلاف هنا.</p>`)+`<ul class="bw${r.any?'':' no'}">${r.lines.map(l=>`<li>${l}</li>`).join('')}</ul>`+`<p>الباقي ${eq(b.R)}`+(b.R<data.D?` أصغر من ${eq(data.D)} فالقسمة صحيحة.`:'.')+`</p>`}
+ case 'end':{const R=data.R;
+  return `<div class="res ${R?'rem':'ok'}"><b>${R?'قسمة مع باقي':'قسمة تامة بدون باقي'}</b><p>ناتج القسمة: ${eq(data.Q)}</p><p>الباقي: ${eq(R)}</p><p>${R?`بقي ${eq(R)} ولا يمكن قسمته على ${eq(data.D)} لأنه أصغر منه.`:'لا يوجد باقي لأن آخر عملية طرح أعطت صفرًا.'}</p><p>للتحقق: ${eq(data.Q+' × '+data.D+(R?' + '+R:'')+' = '+data.N)}</p></div>`}
+ }
+}
+
+function cell(ch,cls){return{ch,cls:cls||''}}
+function draw(){
+ const n=data.n,D=data.D;
+ const dr={cells:{},cls:'dvd',g:1};
+ data.dg.forEach((d,c)=>dr.cells[c]=cell(d));
+ const rows=[dr],q={};let cur=dr,used=-1;
+ for(let i=0;i<=t;i++){
+  const s=steps[i],b=s.b,nw=i===t?' new':'';
+  if(s.t==='pick')used=b.e;
+  else if(s.t==='down'){used=b.e;cur.cells[b.e]=cell(b.d,'down'+nw)}
+  else if(s.t==='div')q[b.e]=cell(b.q,nw);
+  else if(s.t==='mul'){const r={cells:{},minus:1,ln:1},a=String(b.P).split('');a.forEach((ch,j)=>r.cells[b.e-a.length+1+j]=cell(ch,nw));rows.push(r)}
+  else if(s.t==='sub'){
+   for(const k in s.sub.overs){const c=cur.cells[b.e-k];if(c){c.over=s.sub.overs[k];c.cls+=' ov'}}
+   const r={cells:{}},a=String(b.R).split('');a.forEach((ch,j)=>r.cells[b.e-a.length+1+j]=cell(ch,nw));rows.push(r);cur=r;
+  }
+ }
+ const g=Math.max(2,String(D).length+1);
+ const mk=(r,cls)=>{let h=`<div class="rw ${cls||''}" style="--n:${n};--g:${g}"><span class="gut">${r.minus?'−':(r.dv?F(D):'')}</span>`;
+  for(let c=0;c<n;c++){const x=r.cells[c];
+   if(!x){h+='<span class="c"></span>';continue}
+   const fut=r.cls==='dvd'&&c>used?' fut':'';
+   h+=`<span class="c f ${x.cls}${fut}">${x.over!==undefined?`<i>${F(x.over)}</i>`:''}${F(x.ch)}</span>`}
+  return h+'</div>'};
+ dr.dv=1;
+ let h=mk({cells:q},'qr');
+ h=h.replace(/class="c f /g,'class="c q ');
+ rows.forEach(r=>h+=mk(r,(r.cls||'')+(r.ln?' ln':'')));
+ $('#board').innerHTML=h;
+ const s=steps[t];
+ $('#pg').style.width=((t+1)/steps.length*100)+'%';
+ $('#cyc').innerHTML=['div','mul','sub','down'].map(k=>`<span class="${s.t===k?'on':''}">${LBL[k]}</span>`).join('');
+ $('#txt').innerHTML=`<p class="lbl">${LBL[s.t]} <small>(الخطوة ${F(t+1)} من ${F(steps.length)})</small></p><div>${txt(s)}</div>`;
+ $('#pv').disabled=t===0;$('#nx').disabled=t===steps.length-1;
+ $('#all').innerHTML=steps.map((x,i)=>`<li class="${i===t?'cur':''}" data-i="${i}"><b>${LBL[x.t]}:</b> ${txt(x)}</li>`).join('');
+}
+
+function msg(m){$('#msg').textContent=m}
+function run(){
+ const a=norm($('#a').value),b=norm($('#b').value);
+ if(!a||!b){msg('اكتب العددين أولًا.');return}
+ if(+b===0){msg('لا يمكن القسمة على صفر. جرّب عددًا آخر.');return}
+ msg('');data=build(String(+a),+b);steps=data.S;t=0;
+ $('#work').hidden=false;draw();
+ $('#work').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function fmtInputs(){['#a','#b'].forEach(i=>{const v=norm($(i).value);$(i).value=v?F(v):''})}
+function chips(){
+ const ex=[[7843,12],[4025,5],[96,4],[100,7]];
+ $('#chips').innerHTML='<span>جرّب:</span>'+ex.map(([a,b])=>`<button data-a="${a}" data-b="${b}">${F(a)} ÷ ${F(b)}</button>`).join('');
+ $('#dg').textContent=east?'الأرقام: ١٢٣':'الأرقام: 123';
+}
+['#a','#b'].forEach(i=>$(i).addEventListener('input',()=>{const p=$(i).value,v=norm(p);$(i).value=v?F(v):''}));
+['#a','#b'].forEach(i=>$(i).addEventListener('keydown',e=>{if(e.key==='Enter')run()}));
+$('#go').onclick=run;
+$('#chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;$('#a').value=F(b.dataset.a);$('#b').value=F(b.dataset.b);run()};
+$('#nx').onclick=()=>{if(t<steps.length-1){t++;draw()}};
+$('#pv').onclick=()=>{if(t>0){t--;draw()}};
+$('#rs').onclick=()=>{t=0;draw()};
+$('#all').onclick=e=>{const l=e.target.closest('li');if(l){t=+l.dataset.i;draw();$('#board').scrollIntoView({behavior:'smooth',block:'center'})}};
+$('#dg').onclick=()=>{east=!east;chips();fmtInputs();if(data)draw()};
+document.addEventListener('keydown',e=>{if(!data||e.target.tagName==='INPUT')return;
+ if(e.key==='ArrowLeft')$('#nx').click();if(e.key==='ArrowRight')$('#pv').click()});
+chips();$('#a').value=F(7843);$('#b').value=F(12);
+</script>
+</body>
+</html>

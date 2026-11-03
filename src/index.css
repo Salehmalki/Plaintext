@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --paper: #f6fbff;
+    --grid: #d6e6f5;
+    --ink: #1c3a7a;
+    --soft: #637da8;
+    --red: #d93a2f;
+    --royal-blue: #1d4ed8;
+    --rem-color: #ea580c;
+    --rem-bg: #fff7ed;
+    --rem-border: #fdba74;
+    --green: #12805a;
+    --hl: #fef08a;
+    --card: #ffffff;
+    --line: #c4d6ea;
+    --btn: #1c3a7a;
+    --btnt: #ffffff;
+    --warn: #fff1d6;
+    --warnt: #8a4b00;
+    --okbg: #dff5ea;
+    --okt: #0b5a3e;
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #101a26;
+    --grid: #1b2a3b;
+    --ink: #d3e2ff;
+    --soft: #7f98c4;
+    --red: #ff7a6e;
+    --royal-blue: #38bdf8;
+    --rem-color: #fb923c;
+    --rem-bg: #431407;
+    --rem-border: #9a3412;
+    --green: #5fd6a4;
+    --hl: #854d0e;
+    --card: #17253a;
+    --line: #2a3d57;
+    --btn: #60a5fa;
+    --btnt: #0d1b33;
+    --warn: #3d2e10;
+    --warnt: #ffd08a;
+    --okbg: #12352a;
+    --okt: #9ff0cf;
+  }
+
+  body {
+    font-family: 'Cairo', Tahoma, Arial, sans-serif;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image: 
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+}
+
+/* Division Board Styling */
+.math-board {
+  --c: clamp(1.65rem, 6.8vw, 2.6rem);
+  font-family: 'IBM Plex Mono', 'Cairo', monospace;
+  touch-action: pan-x;
+}
+
+.rw {
+  display: grid;
+  grid-template-columns: calc(var(--c) * var(--g)) repeat(var(--n), var(--c));
+  width: max-content;
+  margin: 0 auto;
+}
+
+.rw .c,
+.rw .gut {
+  height: calc(var(--c) * 1.35);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  font-size: calc(var(--c) * 0.88);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.gut {
+  justify-content: flex-end !important;
+  padding-inline-end: 0.35em;
+  color: var(--soft);
+}
+
+.dvd .gut {
+  color: var(--ink);
+  border-inline-end: 3.5px solid var(--ink);
+}
+
+.dvd .c {
+  border-top: 3.5px solid var(--ink);
+}
+
+.dvd .c.fut {
+  color: var(--soft);
+  opacity: 0.45;
+}
+
+.ln .c.f {
+  border-bottom: 3px solid var(--ink);
+}
+
+.qr .c {
+  color: var(--green);
+}
+
+.c.down {
+  color: var(--royal-blue);
+  font-weight: 900;
+  text-shadow: 0 0 1px rgba(29, 78, 216, 0.3);
+}
+
+.c.rem-final {
+  color: var(--rem-color);
+  background: var(--rem-bg);
+  border-radius: 6px;
+  font-weight: 900;
+  text-shadow: 0 0 1px rgba(234, 88, 12, 0.35);
+  box-shadow: inset 0 0 0 1.5px var(--rem-border);
+}
+
+.c.new,
+.c.q.new {
+  background: var(--hl);
+  border-radius: 6px;
+  animation: pulse-highlight 0.35s ease-out;
+}
+
+@keyframes pulse-highlight {
+  0% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+.c.ov {
+  text-decoration: line-through;
+  text-decoration-color: var(--red);
+  text-decoration-thickness: 3px;
+  opacity: 0.75;
+}
+
+.c i {
+  position: absolute;
+  top: -2px;
+  font-size: 0.52em;
+  font-style: normal;
+  color: var(--red);
+  font-weight: 800;
+  background: var(--card);
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+.eq {
+  font-weight: 700;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1px 7px;
+  white-space: nowrap;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 1cm;
+  }
+
+  body {
+    background-image: none !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .printable-sheet {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .math-board {
+    --c: 2.2rem;
+  }
+}
