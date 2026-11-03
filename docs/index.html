@@ -12,100 +12,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
-    <script>
-      (function() {
-        function showDiagnostic(type, msg, detail) {
-          console.error('[DIAGNOSTIC]', type, msg, detail);
-          var banner = document.getElementById('app-diagnostic-banner');
-          if (!banner) {
-            banner = document.createElement('div');
-            banner.id = 'app-diagnostic-banner';
-            banner.style.cssText = 'position:fixed;top:12px;left:12px;right:12px;max-width:700px;margin:0 auto;z-index:999999;background:#fef2f2;border:2px solid #ef4444;border-radius:14px;padding:16px 20px;font-family:Cairo,sans-serif;box-shadow:0 10px 25px -5px rgba(0,0,0,0.15);direction:rtl;';
-            if (document.body) {
-              document.body.prepend(banner);
-            } else {
-              document.documentElement.appendChild(banner);
-            }
-          }
-          banner.innerHTML = '<div style="display:flex;align-items:flex-start;gap:12px;">' +
-            '<div style="font-size:24px;line-height:1;">⚠️</div>' +
-            '<div style="flex:1;">' +
-            '<h4 style="margin:0 0 6px 0;font-size:16px;font-weight:bold;color:#991b1b;">' + type + '</h4>' +
-            '<p style="margin:0 0 8px 0;font-size:14px;color:#7f1d1d;line-height:1.5;">' + (msg || 'حدث خطأ أثناء تحميل التطبيق') + '</p>' +
-            (detail ? '<pre style="margin:0;padding:8px 10px;background:#ffffff;border:1px solid #fecdd3;border-radius:8px;font-family:monospace;font-size:12px;color:#b91c1c;direction:ltr;text-align:left;overflow-x:auto;white-space:pre-wrap;">' + detail + '</pre>' : '') +
-            '<div style="margin-top:10px;"><button onclick="window.location.reload()" style="padding:6px 14px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-weight:bold;font-size:13px;cursor:pointer;">إعادة تحميل الصفحة</button></div>' +
-            '</div></div>';
-        }
-
-        window.addEventListener('error', function(e) {
-          var target = e.target || e.srcElement;
-          if (target && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
-            // Ignore main.tsx failure on static hosting because fallback bundle takes over seamlessly
-            if (target.src && target.src.indexOf('main.tsx') !== -1) {
-              return;
-            }
-            showDiagnostic('فشل تحميل أحد ملفات التطبيق', 'تعذر جلب الملف: ' + (target.src || target.href));
-            return;
-          }
-          var msg = e.message || (e.error && e.error.message) || 'خطأ غير متوقع';
-          var loc = (e.filename || '') + (e.lineno ? (':' + e.lineno + ':' + (e.colno || '')) : '');
-          var stack = e.error && e.error.stack ? e.error.stack : loc;
-          showDiagnostic('خطأ أثناء تشغيل التطبيق', msg, stack);
-        }, true);
-
-        window.addEventListener('unhandledrejection', function(e) {
-          var reason = e.reason || {};
-          var msg = reason.message || String(reason);
-          showDiagnostic('خطأ غير معالج (Promise)', msg, reason.stack || '');
-        });
-      })();
-    </script>
-    <script type="module" crossorigin src="./assets/app.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index.css">
+    <script type="module" src="/src/main.tsx"></script>
+    
   </head>
   <body class="font-cairo">
     <div id="root"></div>
-
-    <!-- Development entry point for Vite -->
-
-    <!-- Seamless fallback loader if running directly on GitHub Pages or static host where main.tsx is 404 -->
-    <script>
-      function loadFallbackBundle() {
-        if (window.__app_mounted || window.__bundle_loading) return;
-        window.__bundle_loading = true;
-        console.log('Static host detected (main.tsx 404). Loading pre-built bundle from ./assets/app.js...');
-        
-        var banner = document.getElementById('app-diagnostic-banner');
-        if (banner) banner.remove();
-
-        if (!document.querySelector('link[href*="index.css"]')) {
-          var link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = './assets/index.css';
-          document.head.appendChild(link);
-        }
-
-        var script = document.createElement('script');
-        script.type = 'module';
-        script.src = './assets/app.js';
-        script.onload = function() {
-          window.__app_mounted = true;
-          var b = document.getElementById('app-diagnostic-banner');
-          if (b) b.remove();
-        };
-        document.body.appendChild(script);
-      }
-
-      // Safety check: if after 600ms root is empty and main.tsx did not compile/mount
-      setTimeout(function() {
-        var root = document.getElementById('root');
-        if (root && root.children.length === 0 && !window.__app_mounted) {
-          if (!window.__vite_plugin_react_preamble_installed__ && !window.$RefreshReg$) {
-            loadFallbackBundle();
-          }
-        }
-      }, 600);
-    </script>
   </body>
 </html>
-
