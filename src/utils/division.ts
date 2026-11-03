@@ -284,10 +284,12 @@ export function generateBoardState(
   // If we are at the final 'end' step, ensure the bottom remainder row is highlighted
   if (currentStepIndex === data.S.length - 1 && rows.length > 1) {
     const lastRow = rows[rows.length - 1];
-    for (const col in lastRow.cells) {
-      const cell = lastRow.cells[col];
-      if (!cell.cls.includes('rem-final')) {
-        cell.cls = ('rem-final ' + cell.cls).trim();
+    if (lastRow && lastRow.cells) {
+      for (const col in lastRow.cells) {
+        const cell = lastRow.cells[col];
+        if (cell && !cell.cls.includes('rem-final')) {
+          cell.cls = ('rem-final ' + cell.cls).trim();
+        }
       }
     }
   }

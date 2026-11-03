@@ -86,7 +86,8 @@ export default function App() {
   const startDivision = (
     dividendVal: string,
     divisorVal: string,
-    easternFlag = isEastern
+    easternFlag = isEastern,
+    playSound = false
   ) => {
     const normA = normalizeDigits(dividendVal);
     const normB = normalizeDigits(divisorVal);
@@ -109,13 +110,13 @@ export default function App() {
     setIsPracticeStepVerified(false);
     setIsPlaying(false);
 
-    if (soundEnabled) {
+    if (soundEnabled && playSound) {
       playClick();
     }
   };
 
   const handleStart = () => {
-    startDivision(dividend, divisor);
+    startDivision(dividend, divisor, isEastern, true);
     setTimeout(() => {
       workSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
@@ -158,7 +159,7 @@ export default function App() {
     const formattedB = formatDigits(randB, isEastern);
     setDividend(formattedA);
     setDivisor(formattedB);
-    startDivision(String(randA), String(randB));
+    startDivision(String(randA), String(randB), isEastern, true);
 
     setTimeout(() => {
       workSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
