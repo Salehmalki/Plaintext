@@ -40,6 +40,10 @@
         window.addEventListener('error', function(e) {
           var target = e.target || e.srcElement;
           if (target && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
+            // Ignore main.tsx failure on static hosting because fallback bundle takes over seamlessly
+            if (target.src && target.src.indexOf('main.tsx') !== -1) {
+              return;
+            }
             showDiagnostic('فشل تحميل أحد ملفات التطبيق', 'تعذر جلب الملف: ' + (target.src || target.href));
             return;
           }
@@ -59,7 +63,48 @@
   </head>
   <body class="font-cairo">
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Development entry point for Vite -->
+    <script type="module" src="./src/main.tsx" onerror="loadFallbackBundle()"></script>
+
+    <!-- Seamless fallback loader if running directly on GitHub Pages or static host where main.tsx is 404 -->
+    <script>
+      function loadFallbackBundle() {
+        if (window.__app_mounted || window.__bundle_loading) return;
+        window.__bundle_loading = true;
+        console.log('Static host detected (main.tsx 404). Loading pre-built bundle from ./assets/app.js...');
+        
+        var banner = document.getElementById('app-diagnostic-banner');
+        if (banner) banner.remove();
+
+        if (!document.querySelector('link[href*="index.css"]')) {
+          var link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = './assets/index.css';
+          document.head.appendChild(link);
+        }
+
+        var script = document.createElement('script');
+        script.type = 'module';
+        script.src = './assets/app.js';
+        script.onload = function() {
+          window.__app_mounted = true;
+          var b = document.getElementById('app-diagnostic-banner');
+          if (b) b.remove();
+        };
+        document.body.appendChild(script);
+      }
+
+      // Safety check: if after 600ms root is empty and main.tsx did not compile/mount
+      setTimeout(function() {
+        var root = document.getElementById('root');
+        if (root && root.children.length === 0 && !window.__app_mounted) {
+          if (!window.__vite_plugin_react_preamble_installed__ && !window.$RefreshReg$) {
+            loadFallbackBundle();
+          }
+        }
+      }, 600);
+    </script>
   </body>
 </html>
 

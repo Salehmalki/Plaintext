@@ -74,6 +74,7 @@ function mountApp() {
         </ErrorBoundary>
       </React.StrictMode>
     );
+    (window as unknown as { __app_mounted?: boolean }).__app_mounted = true;
     console.log('App successfully mounted into #root');
   } catch (err: unknown) {
     const error = err as Error;
