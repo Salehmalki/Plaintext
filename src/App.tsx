@@ -23,7 +23,15 @@ import { playStepChime, playClick } from './utils/audio';
 export default function App() {
   // Theme & Settings
   const [isEastern, setIsEastern] = useState<boolean>(true);
-  const [isDark, setIsDark] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('division_theme');
+      if (saved === 'dark') return true;
+      if (saved === 'light') return false;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [appMode, setAppMode] = useState<'explain' | 'practice'>('explain');
 
@@ -41,25 +49,33 @@ export default function App() {
 
   const workSectionRef = useRef<HTMLDivElement>(null);
 
-  // Initialize theme from system or preference
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) {
-        setIsDark(true);
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    }
-  }, []);
-
-  // Update theme on html root
+  // Sync theme changes with DOM and localStorage
   useEffect(() => {
     if (isDark) {
       document.documentElement.setAttribute('data-theme', 'dark');
+      try {
+        localStorage.setItem('division_theme', 'dark');
+      } catch (e) {}
     } else {
-      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.setAttribute('data-theme', 'light');
+      try {
+        localStorage.setItem('division_theme', 'light');
+      } catch (e) {}
     }
   }, [isDark]);
+
+  // Listen to OS theme changes if user hasn't explicitly set a preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => {
+      const saved = localStorage.getItem('division_theme');
+      if (!saved) {
+        setIsDark(e.matches);
+      }
+    };
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
 
   // Initial calculation on first mount
   useEffect(() => {

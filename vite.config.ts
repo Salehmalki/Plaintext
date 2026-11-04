@@ -11,14 +11,16 @@ export default defineConfig(({ command }) => {
       tailwindcss(),
       {
         name: 'vite-entry-switcher',
-        transformIndexHtml(html) {
-          // Both in dev server and during build parsing, map assets/app.js to /src/main.tsx
-          return html
-            .replace(/<link\b[^>]*href=["'](?:\.\/|\/)?assets\/index\.css["'][^>]*\/?>/gi, '')
-            .replace(
-              /<script\b[^>]*src=["'](?:\.\/|\/)?assets\/app\.js["'][^>]*>.*?<\/script>/gis,
-              '<script type="module" src="/src/main.tsx"></script>'
-            );
+        transformIndexHtml: {
+          order: 'pre',
+          handler(html) {
+            return html
+              .replace(/<link\b[^>]*href=["'](?:\.\/|\/)?assets\/index\.css["'][^>]*\/?>/gi, '')
+              .replace(
+                /<script\b[^>]*src=["'](?:\.\/|\/)?assets\/app\.js["'][^>]*>.*?<\/script>/gis,
+                '<script type="module" src="/src/main.tsx"></script>'
+              );
+          },
         },
       },
     ],
